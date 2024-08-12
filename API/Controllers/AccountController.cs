@@ -14,6 +14,7 @@ public class AccountController(DataContext context, ITokenService tokenService) 
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto dto)
     {
+        /*
         if (await UserExists(dto.UserName)) return BadRequest("This username is already taken");
 
         using var hmac = new HMACSHA512();
@@ -35,6 +36,8 @@ public class AccountController(DataContext context, ITokenService tokenService) 
         };
 
         return Ok(result);
+        */
+        return Ok();
     }
 
     [HttpPost("login")]
