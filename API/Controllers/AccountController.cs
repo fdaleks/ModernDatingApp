@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace API.Controllers;
 
-public class AccountController(DataContext context, ITokenService tokenService) : BaseApiController
+public class AccountController(DataContext context, ITokenService tokenService, IUserRepository userRepository) : BaseApiController
 {
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto dto)
@@ -43,7 +44,7 @@ public class AccountController(DataContext context, ITokenService tokenService) 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto dto)
     {
-        var user = await context.Users.FirstOrDefaultAsync(x => x.UserName.ToLower() == dto.UserName.ToLower());
+        var user = await userRepository.GetUserByNameAsync(dto.UserName);
 
         if (user == null) return Unauthorized("Invalid username");
 
@@ -61,7 +62,8 @@ public class AccountController(DataContext context, ITokenService tokenService) 
         var result = new UserDto()
         {
             UserName = user.UserName,
-            Token = tokenService.CreateToken(user)
+            Token = tokenService.CreateToken(user),
+            PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
         };
 
         return Ok(result);

@@ -13,12 +13,14 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
     {
         context.Entry(user).State = EntityState.Modified;
     }
+
     public async Task<bool> SaveAllAsync()
     {
         var result = await context.SaveChangesAsync();
         return result > 0;
     }
 
+    // Users
     public async Task<IEnumerable<AppUser>> GetUsersAsync()
     {
         var users = await context.Users
@@ -41,7 +43,7 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         return user;
     }
 
-
+    // Members
     public async Task<IEnumerable<MemberDto>> GetMembersAsync()
     {
         var members = await context.Users
