@@ -22,7 +22,10 @@
         
         @if (accountService.currentUser()) {
             <div dropdown class="dropdown">
-                <img class="me-2" src="{{accountService.currentUser()?.photoUrl || './assets/user.png'}}" alt="user main image">
+                <img class="me-2" 
+                    src="{{accountService.currentUser()?.photoUrl || './assets/user.png'}}" 
+                    alt="User main image"
+                >
                 <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">
                     Welcome {{accountService.currentUser()?.knownAs}}
                 </a>
@@ -36,21 +39,21 @@
         
         @if (!accountService.currentUser()) {
             <form #loginForm="ngForm" (ngSubmit)="login()" class="d-flex" autocomplete="off">
-                <input 
+                <input class="form-control me-2" 
                     name="username" 
                     [(ngModel)]="loginModel.userName" 
-                    class="form-control me-2"
-                    type="text"
-                    placeholder="UserName"
+                    type="text" 
+                    placeholder="UserName" 
                 >
-                <input 
+                <input class="form-control me-2" 
                     name="password" 
                     [(ngModel)]="loginModel.password" 
-                    class="form-control me-2" 
                     type="password" 
-                    placeholder="Password"
+                    placeholder="Password" 
                 >
-                <button class="btn btn-success" type="submit">Login</button>
+                <button class="btn btn-success" 
+                    type="submit" 
+                >Login</button>
             </form>
         }
 

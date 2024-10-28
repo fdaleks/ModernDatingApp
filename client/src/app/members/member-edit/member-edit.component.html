@@ -12,7 +12,10 @@
         </div>
         <div class="col-4">
             <div class="card">
-                <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" class="card-img img-thumbnail">
+                <img class="card-img img-thumbnail" 
+                    src="{{member.photoUrl || './assets/user.png'}}" 
+                    alt="{{member.knownAs}}"
+                >
                 <div class="card-body">
                     <div>
                         <strong>Location:</strong>
@@ -32,10 +35,9 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button 
+                    <button class="btn btn-success col-12" 
                         form="editForm" 
-                        type="submit"  
-                        class="btn btn-success col-12"
+                        type="submit" 
                         [disabled]="!editForm.dirty"
                     >Save changes</button>
                 </div>
@@ -47,24 +49,21 @@
                     <form id="editForm" #editForm="ngForm" (ngSubmit)="updateMember()">
 
                         <h4 class="mt-2">Description</h4>
-                        <textarea 
-                            class="form-control" 
+                        <textarea class="form-control" 
                             name="introduction" 
                             [(ngModel)]="member.introduction"
                             rows="6"
                         ></textarea>
 
                         <h4 class="mt-2">Looking for</h4>
-                        <textarea 
-                            class="form-control" 
+                        <textarea class="form-control" 
                             name="lookingFor" 
                             [(ngModel)]="member.lookingFor"
                             rows="6"
                         ></textarea>
 
                         <h4 class="mt-2">Interests</h4>
-                        <textarea 
-                            class="form-control" 
+                        <textarea class="form-control" 
                             name="interests" 
                             [(ngModel)]="member.interests"
                             rows="6"
@@ -74,17 +73,17 @@
 
                         <div class="d-flex align-items-center">
                             <label>City: </label>
-                            <input type="text" 
-                                class="form-control mx-2" 
-                                name="city"
-                                [(ngModel)]="member.city"
+                            <input class="form-control mx-2" 
+                                type="text" 
+                                name="city" 
+                                [(ngModel)]="member.city" 
                             >
 
                             <label>Country: </label>
-                            <input type="text" 
-                                class="form-control mx-2" 
-                                name="country"
-                                [(ngModel)]="member.country"
+                            <input class="form-control mx-2" 
+                                type="text" 
+                                name="country" 
+                                [(ngModel)]="member.country" 
                             >
                         </div>
 

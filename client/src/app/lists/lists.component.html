@@ -5,31 +5,28 @@
 <div class="container mt-3">
     <div class="d-flex">
         <div class="btn-group">
-            <button 
-                type="button"
-                class="btn btn-primary" 
-                name="predicate"
-                (click)="loadLikes()"
-                btnRadio="liked"
-                [(ngModel)]="likesService.likesParams().predicate"
+            <button class="btn btn-primary" 
+                type="button" 
+                name="predicate" 
+                (click)="loadLikes()" 
+                btnRadio="liked" 
+                [(ngModel)]="predicate" 
             >Members I like</button>
 
-            <button 
-                type="button"
-                class="btn btn-primary" 
-                name="predicate"
-                (click)="loadLikes()"
-                btnRadio="likedBy"
-                [(ngModel)]="likesService.likesParams().predicate"
+            <button class="btn btn-primary" 
+                type="button" 
+                name="predicate" 
+                (click)="loadLikes()" 
+                btnRadio="likedBy" 
+                [(ngModel)]="predicate" 
             >Members who likes me</button>
 
-            <button 
-                type="button"
-                class="btn btn-primary" 
-                name="predicate"
-                (click)="loadLikes()"
-                btnRadio="mutual"
-                [(ngModel)]="likesService.likesParams().predicate"
+            <button class="btn btn-primary" 
+                type="button" 
+                name="predicate" 
+                (click)="loadLikes()" 
+                btnRadio="mutual" 
+                [(ngModel)]="predicate" 
             >Mutual likes</button>
         </div>
     </div>

@@ -16,7 +16,12 @@ public class AppUser
     public string? LookingFor { get; set; }
     public required string City { get; set; }
     public required string Country { get; set; }
+    // photos
     public List<Photo> Photos { get; set; } = [];
+    // likes
     public List<UserLike> CurrentUserLikedBy { get; set; } = [];
     public List<UserLike> LikedByCurrentUser { get; set; } = [];
+    // messages
+    public List<Message> MessagesSent { get; set; } = [];
+    public List<Message> MessagesReceived { get; set; } = [];
 }

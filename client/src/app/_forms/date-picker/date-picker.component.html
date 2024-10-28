@@ -1,12 +1,11 @@
 <div class="mb-3 form-floating">
-    <input 
+    <input class="form-control" 
         [class.is-invalid]="control.touched && control.invalid" 
-        class="form-control" 
         placeholder="{{label()}}" 
-        [formControl]="control"
-        bsDatepicker
-        [bsConfig]="bsConfig"
-        [maxDate]="maxDate()"
+        [formControl]="control" 
+        bsDatepicker 
+        [bsConfig]="bsConfig" 
+        [maxDate]="maxDate()" 
     >
     <label>{{label()}}</label>
 

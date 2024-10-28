@@ -5,7 +5,7 @@ import { Member } from '../_models/member';
 import { of } from 'rxjs';
 import { Photo } from '../_models/photo';
 import { PaginatedResult } from '../_models/pagination';
-import { UserParams } from '../_models/params/userParams';
+import { UserParams } from '../_models/userParams';
 import { AccountService } from './account.service';
 import { setPaginatedResponse, setPaginationHeaders } from '../_helpers/paginationHelper';
 
@@ -14,7 +14,7 @@ import { setPaginatedResponse, setPaginationHeaders } from '../_helpers/paginati
 })
 export class MembersService {
   private httpClient = inject(HttpClient);
-  private accountService = inject(AccountService)
+  private accountService = inject(AccountService);
   private baseUrl: string = environment.apiUrl;
   paginatedResult = signal<PaginatedResult<Member[]> | null>(null);
   user = this.accountService.currentUser();

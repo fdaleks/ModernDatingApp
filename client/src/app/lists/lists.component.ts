@@ -14,23 +14,24 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 })
 export class ListsComponent implements OnInit, OnDestroy {
   likesService = inject(LikesService);
+  pageNumber: number = 1;
+  pageSize: number = 4;
+  predicate: string = 'liked';
 
   ngOnInit(): void {
-    if (!this.likesService.paginatedResult()) this.loadLikes();
+    this.loadLikes();
   }
 
-  // pls note that we clear cache when user switch bewtween pages
   ngOnDestroy(): void {
     this.likesService.paginatedResult.set(null);
-    this.likesService.clearLikesCache();
   }
 
   loadLikes() {
-    this.likesService.getUserLikes();
+    this.likesService.getUserLikes(this.pageNumber, this.pageSize, this.predicate);
   }
 
   getTitle() {
-    switch (this.likesService.likesParams().predicate) {
+    switch (this.predicate) {
       case 'liked':
         return 'Members you like';
       case 'likedBy':
@@ -42,8 +43,8 @@ export class ListsComponent implements OnInit, OnDestroy {
   }
 
   pageChanged(event: any) {
-    if (this.likesService.likesParams().pageNumber !== event.page) {
-      this.likesService.likesParams().pageNumber = event.page;
+    if (this.pageNumber !== event.page) {
+      this.pageNumber = event.page;
       this.loadLikes();
     }
   }

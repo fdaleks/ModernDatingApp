@@ -3,7 +3,6 @@ using API.Entities;
 using API.Extensions;
 using API.Helpers.Params;
 using API.Interfaces;
-using AutoMapper.Execution;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +15,6 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
     public async Task<ActionResult> ToggleLike(int targetUserId)
     {
         var sourceUserId = User.GetUserId();
-
         if (sourceUserId == targetUserId) return BadRequest("You can't lick your own balls");
 
         var existingLike = await likesRepository.GetUserLikeAsync(sourceUserId, targetUserId);
@@ -40,11 +38,11 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUserLikes([FromQuery] LikesParams userParams)
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUserLikes([FromQuery] LikesParams likesParams)
     {
-        userParams.UserId = User.GetUserId();
+        likesParams.UserId = User.GetUserId();
 
-        var users = await likesRepository.GetUserLikesAsync(userParams);
+        var users = await likesRepository.GetUserLikesAsync(likesParams);
 
         Response.AddPaginationHeader(users);
 

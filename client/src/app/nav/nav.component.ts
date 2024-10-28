@@ -4,7 +4,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AccountService } from '../_services/account.service';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { LikesService } from '../_services/likes.service';
 
 @Component({
   selector: 'app-nav',
@@ -15,7 +14,6 @@ import { LikesService } from '../_services/likes.service';
 })
 export class NavComponent {
   public accountService = inject(AccountService);
-  private likesService = inject(LikesService);
   private router = inject(Router);
   private tostr = inject(ToastrService);
   loginModel: any = {};
@@ -29,7 +27,6 @@ export class NavComponent {
 
   logout() {
     this.accountService.logout();
-    this.likesService.clearLikesCache();
     this.router.navigateByUrl('/');
   }
 }

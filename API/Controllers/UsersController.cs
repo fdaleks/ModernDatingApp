@@ -13,7 +13,7 @@ namespace API.Controllers;
 public class UsersController(IUserRepository userRepository, IPhotoService photoService, IMapper mapper) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetMembers([FromQuery]UserParams userParams)
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetMembers([FromQuery] UserParams userParams)
     {
         userParams.CurrentUsername = User.GetUserName();
 

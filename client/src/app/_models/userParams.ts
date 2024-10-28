@@ -1,14 +1,14 @@
-import { User } from "../user";
-import { PaginationParams } from "./paginationParams";
+import { User } from "./user";
 
-export class UserParams extends PaginationParams {
+export class UserParams {
+    pageNumber: number = 1;
+    pageSize: number = 4;
     minAge: number = 18;
     maxAge: number = 60;
     gender: string;
     orderBy: string = 'lastActive';
 
     constructor(user: User | null) {
-        super();
         this.gender = user?.gender === 'female' ? 'male' : 'female';
     }
 }
