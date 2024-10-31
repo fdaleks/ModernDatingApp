@@ -9,12 +9,11 @@ public interface IUserRepository
 {
     void Update(AppUser user);
     Task<bool> SaveAllAsync();
-
-    Task<IEnumerable<AppUser>> GetUsersAsync();
+    Task<bool> UserExists(string userName);
+    // Users
     Task<AppUser?> GetUserByIdAsync(int id);
     Task<AppUser?> GetUserByNameAsync(string name);
-
+    // Members
     Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
-    Task<MemberDto?> GetMemberByIdAsync(int id);
     Task<MemberDto?> GetMemberByNameAsync(string name);
 }

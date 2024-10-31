@@ -1,12 +1,13 @@
 ﻿using API.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
-public class DataContext(DbContextOptions options) : DbContext(options)
+public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, AppRole, int, 
+    IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>(options)
 {
-    public DbSet<AppUser> Users { get; set; }
-
     public DbSet<UserLike> Likes { get; set; }
 
     public DbSet<Message> Messages { get; set; }
@@ -15,6 +16,7 @@ public class DataContext(DbContextOptions options) : DbContext(options)
     {
         base.OnModelCreating(builder);
 
+        // likes
         builder.Entity<UserLike>()
             .HasKey(key => new { key.SourceUserId, key.TargetUserId });
 
@@ -30,6 +32,7 @@ public class DataContext(DbContextOptions options) : DbContext(options)
             .HasForeignKey(source => source.TargetUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // messages
         builder.Entity<Message>()
             .HasOne(x => x.Recipient)
             .WithMany(x => x.MessagesReceived)
@@ -39,5 +42,19 @@ public class DataContext(DbContextOptions options) : DbContext(options)
             .HasOne(x => x.Sender)
             .WithMany(x => x.MessagesSent)
             .OnDelete(DeleteBehavior.Restrict);
+
+        //roles
+        builder.Entity<AppUser>()
+            .HasMany(x => x.UserRoles)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .IsRequired();
+
+        builder.Entity<AppRole>()
+            .HasMany(x => x.UserRoles)
+            .WithOne(x => x.Role)
+            .HasForeignKey(x => x.RoleId)
+            .IsRequired();
+
     }
 }

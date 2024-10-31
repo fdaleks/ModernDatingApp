@@ -23,15 +23,12 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         return result > 0;
     }
 
-    // Users
-    public async Task<IEnumerable<AppUser>> GetUsersAsync()
+    public async Task<bool> UserExists(string userName)
     {
-        var users = await context.Users
-            .Include(x => x.Photos)
-            .ToListAsync();
-        return users;
+        return await context.Users.AnyAsync(x => x.NormalizedUserName == userName.ToUpper());
     }
 
+    // Users
     public async Task<AppUser?> GetUserByIdAsync(int id)
     {
         var user = await context.Users.FindAsync(id);
@@ -42,7 +39,7 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
     {
         var user = await context.Users
             .Include(x => x.Photos)
-            .SingleOrDefaultAsync(x => x.UserName.ToLower() == userName.ToLower());
+            .SingleOrDefaultAsync(x => x.NormalizedUserName == userName.ToUpper());
         return user;
     }
 
@@ -74,20 +71,10 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         return result;
     }
 
-    public async Task<MemberDto?> GetMemberByIdAsync(int id)
-    {
-        var member = await context.Users
-            .Where(x => x.Id == id)
-            .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
-            .SingleOrDefaultAsync();
-
-        return member;
-    }
-
     public async Task<MemberDto?> GetMemberByNameAsync(string userName)
     {
         var member = await context.Users
-            .Where(x => x.UserName.ToLower() == userName.ToLower())
+            .Where(x => x.NormalizedUserName == userName.ToUpper())
             .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
             .SingleOrDefaultAsync();
 

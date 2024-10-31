@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using API.Data;
+using API.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -8,8 +11,18 @@ public static class IdentityServiceExtensions
 {
     public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
-            AddJwtBearer(opt =>
+        services
+            .AddIdentityCore<AppUser>(opt => 
+            { 
+                opt.Password.RequireNonAlphanumeric = false;
+            })
+            .AddRoles<AppRole>()
+            .AddRoleManager<RoleManager<AppRole>>()
+            .AddEntityFrameworkStores<DataContext>();
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opt =>
             {
                 var tokenKey = config["TokenKey"] ?? throw new Exception("TokenKey not found");
                 opt.TokenValidationParameters = new TokenValidationParameters
@@ -20,6 +33,10 @@ public static class IdentityServiceExtensions
                     ValidateAudience = false
                 };
             });
+
+        services.AddAuthorizationBuilder()
+            .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
+            .AddPolicy("ModeratePhotosRole", policy => policy.RequireRole("Admin", "Moderator"));
 
         return services;
     }
