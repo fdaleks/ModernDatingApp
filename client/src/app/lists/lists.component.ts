@@ -22,10 +22,6 @@ export class ListsComponent implements OnInit, OnDestroy {
     this.loadLikes();
   }
 
-  ngOnDestroy(): void {
-    this.likesService.paginatedResult.set(null);
-  }
-
   loadLikes() {
     this.likesService.getUserLikes(this.pageNumber, this.pageSize, this.predicate);
   }
@@ -49,4 +45,7 @@ export class ListsComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngOnDestroy(): void {
+    this.likesService.paginatedResult.set(null);
+  }
 }

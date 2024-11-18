@@ -14,7 +14,7 @@ import { HasRoleDirective } from '../_directives/has-role.directive';
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
-  public accountService = inject(AccountService);
+  accountService = inject(AccountService);
   private router = inject(Router);
   private tostr = inject(ToastrService);
   loginModel: any = {};

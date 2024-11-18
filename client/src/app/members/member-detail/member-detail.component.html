@@ -6,6 +6,11 @@
                 alt="{{member.knownAs}}"
             >
             <div class="card-body">
+                @if (isOnline()) {
+                    <div class="mb-2">
+                        <i class="fa fa-user-circle text-success"></i> Online now
+                    </div>
+                }
                 <div>
                     <strong>Location:</strong>
                     <p>{{member.city}}, {{member.country}}</p>
@@ -54,9 +59,7 @@
             </tab>
             <tab heading="Messages" (selectTab)="onTabActivated($event)">
                 <app-member-messages 
-                    [userName]="member.userName" 
-                    [messages]="messages"
-                    (updateMessages)="onUpdateMessages($event)"
+                    [userName]="member.userName"
                 ></app-member-messages>
             </tab>
         </tabset>

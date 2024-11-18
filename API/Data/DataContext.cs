@@ -9,14 +9,15 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, 
     IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>(options)
 {
     public DbSet<UserLike> Likes { get; set; }
-
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<Connection> Connections { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        // likes
+        // Likes
         builder.Entity<UserLike>()
             .HasKey(key => new { key.SourceUserId, key.TargetUserId });
 
@@ -32,7 +33,7 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, 
             .HasForeignKey(source => source.TargetUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // messages
+        // Messages
         builder.Entity<Message>()
             .HasOne(x => x.Recipient)
             .WithMany(x => x.MessagesReceived)
@@ -43,7 +44,7 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, 
             .WithMany(x => x.MessagesSent)
             .OnDelete(DeleteBehavior.Restrict);
 
-        //roles
+        // Roles
         builder.Entity<AppUser>()
             .HasMany(x => x.UserRoles)
             .WithOne(x => x.User)
@@ -55,6 +56,5 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, 
             .WithOne(x => x.Role)
             .HasForeignKey(x => x.RoleId)
             .IsRequired();
-
     }
 }

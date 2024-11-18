@@ -13,13 +13,13 @@ namespace API.Controllers;
 public class MessagesController(IMessagesRepository messagesRepository, IUserRepository userRepository, IMapper mapper) : BaseApiController
 {
     [HttpPost]
-    public async Task<ActionResult<MessageDto>> CreateMessage(MessageCreateDto messageCreateDto)
+    public async Task<ActionResult<MessageDto>> CreateMessage(MessageCreateDto dto)
     {
         var userName = User.GetUserName();
-        if (userName == messageCreateDto.RecipientUserName.ToLower()) return BadRequest("You can't message yourself");
+        if (userName == dto.RecipientUserName.ToLower()) return BadRequest("You can't message yourself");
 
         var sender = await userRepository.GetUserByNameAsync(userName);
-        var recipient = await userRepository.GetUserByNameAsync(messageCreateDto.RecipientUserName);
+        var recipient = await userRepository.GetUserByNameAsync(dto.RecipientUserName);
 
         if (sender == null || sender.UserName == null || recipient == null || recipient.UserName == null) 
             return BadRequest("Can't send a message");
@@ -30,7 +30,7 @@ public class MessagesController(IMessagesRepository messagesRepository, IUserRep
             SenderUserName = sender.UserName,
             Recipient = recipient,
             RecipientUserName = recipient.UserName,
-            Content = messageCreateDto.Content,
+            Content = dto.Content,
         };
 
         messagesRepository.AddMessage(message);
