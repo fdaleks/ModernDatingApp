@@ -12,8 +12,8 @@ export class RolesModalComponent {
   bsModalRef = inject(BsModalRef);
   title: string = '';
   userName: string = '';
-  availableRoles: string[] = [];
   selectedRoles: string[] = [];
+  availableRoles: string[] = [];
   rolesUpdated: boolean = false;
 
   updateChecked(checkedValue: string) {

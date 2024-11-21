@@ -17,12 +17,6 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         context.Entry(user).State = EntityState.Modified;
     }
 
-    public async Task<bool> SaveAllAsync()
-    {
-        var result = await context.SaveChangesAsync();
-        return result > 0;
-    }
-
     public async Task<bool> UserExists(string userName)
     {
         return await context.Users.AnyAsync(x => x.NormalizedUserName == userName.ToUpper());

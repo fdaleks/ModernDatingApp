@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-public class AccountController(UserManager<AppUser> userManager, 
-    ITokenService tokenService, IUserRepository userRepository, IMapper mapper) : BaseApiController
+public class AccountController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork,
+    ITokenService tokenService, IMapper mapper) : BaseApiController
 {
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto dto)
     {
-        if (await userRepository.UserExists(dto.UserName)) return BadRequest("This username is already taken");
+        if (await unitOfWork.UserRepository.UserExists(dto.UserName)) return BadRequest("This username is already taken");
 
         var user = mapper.Map<AppUser>(dto);
         user.UserName = dto.UserName.ToLower();
@@ -35,7 +35,7 @@ public class AccountController(UserManager<AppUser> userManager,
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto dto)
     {
-        var user = await userRepository.GetUserByNameAsync(dto.UserName);
+        var user = await unitOfWork.UserRepository.GetUserByNameAsync(dto.UserName);
         if (user == null || user.UserName == null) return Unauthorized("Invalid username");
 
         var response = await userManager.CheckPasswordAsync(user, dto.Password);

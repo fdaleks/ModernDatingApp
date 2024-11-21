@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Authorize]
-public class LikesController(ILikesRepository likesRepository) : BaseApiController
+public class LikesController(IUnitOfWork unitOfWork) : BaseApiController
 {
     [HttpPost("{targetUserId:int}")]
     public async Task<ActionResult> ToggleLike(int targetUserId)
@@ -17,7 +17,7 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
         var sourceUserId = User.GetUserId();
         if (sourceUserId == targetUserId) return BadRequest("You can't lick your own balls");
 
-        var existingLike = await likesRepository.GetUserLikeAsync(sourceUserId, targetUserId);
+        var existingLike = await unitOfWork.LikesRepository.GetUserLikeAsync(sourceUserId, targetUserId);
         if (existingLike == null)
         {
             var newLike = new UserLike
@@ -26,14 +26,14 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
                 TargetUserId = targetUserId
             };
 
-            likesRepository.AddLike(newLike);
+            unitOfWork.LikesRepository.AddLike(newLike);
         }
         else
         {
-            likesRepository.DeleteLike(existingLike);
+            unitOfWork.LikesRepository.DeleteLike(existingLike);
         }
 
-        if (await likesRepository.SaveAllAsync()) return Ok();
+        if (await unitOfWork.CompleteAsync()) return Ok();
         return BadRequest("Failed to update like");
     }
 
@@ -42,7 +42,7 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
     {
         likesParams.UserId = User.GetUserId();
 
-        var users = await likesRepository.GetUserLikesAsync(likesParams);
+        var users = await unitOfWork.LikesRepository.GetUserLikesAsync(likesParams);
 
         Response.AddPaginationHeader(users);
 
@@ -54,7 +54,7 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
     {
         var sourceUserId = User.GetUserId();
 
-        var result = await likesRepository.GetCurrentUserLikeIdsAsync(sourceUserId);
+        var result = await unitOfWork.LikesRepository.GetCurrentUserLikeIdsAsync(sourceUserId);
 
         return Ok(result);
     }

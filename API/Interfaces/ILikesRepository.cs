@@ -9,7 +9,6 @@ public interface ILikesRepository
 {
     void AddLike(UserLike like);
     void DeleteLike(UserLike like);
-    Task<bool> SaveAllAsync();
 
     Task<UserLike?> GetUserLikeAsync(int sourceUserId, int targetUserId);
     Task<PagedList<MemberDto>> GetUserLikesAsync(LikesParams likesParams);

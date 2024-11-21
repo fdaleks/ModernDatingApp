@@ -23,12 +23,6 @@ public class LikesRepository(DataContext context, IMapper mapper) : ILikesReposi
         context.Likes.Remove(like);
     }
 
-    public async Task<bool> SaveAllAsync()
-    {
-        var result = await context.SaveChangesAsync();
-        return result > 0;
-    }
-
     public async Task<IEnumerable<int>> GetCurrentUserLikeIdsAsync(int currentUserId)
     {
         var result  = await context.Likes

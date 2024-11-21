@@ -9,7 +9,6 @@ public interface IMessagesRepository
 {
     void AddMessage(Message message);
     void DeleteMessage(Message message);
-    Task<bool> SaveAllAsync();
 
     Task<Message?> GetMessageByIsAsync(int messageId);
     Task<PagedList<MessageDto>> GetMessagesForUserAsync(MessageParams messageParams);
@@ -18,6 +17,5 @@ public interface IMessagesRepository
     void AddGroup(Group group);
     Task<Group?> GetMessageGroupAsync(string groupName);
     Task<Group?> GetGroupForConnectionAsync(string connectionId);
-    //Task<Connection?> GetConnectionAsync(string connectionId);
     void RemoveConnection(Connection connection);
 }
