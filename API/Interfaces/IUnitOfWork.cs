@@ -2,9 +2,10 @@
 
 public interface IUnitOfWork
 {
+    IUserRepository UserRepository { get; }
     ILikesRepository LikesRepository { get; }
     IMessagesRepository MessagesRepository { get; }
-    IUserRepository UserRepository { get; }
+    IPhotoRepository PhotoRepository { get; }    
 
     Task<bool> CompleteAsync();
     bool HasChanges();

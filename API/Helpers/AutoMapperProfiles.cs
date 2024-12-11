@@ -29,5 +29,8 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<DateTime, DateTime>().ConvertUsing(dt => DateTime.SpecifyKind(dt, DateTimeKind.Utc));
         CreateMap<DateTime?, DateTime?>().ConvertUsing(dt => dt.HasValue ? DateTime.SpecifyKind(dt.Value, DateTimeKind.Utc) : null);
+
+        CreateMap<Photo, PhotoForModerationDto>().
+            ForMember(d => d.UserName, o => o.MapFrom(s => s.AppUser.UserName));
     }
 }

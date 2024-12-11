@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Member } from '../_models/member';
@@ -54,37 +54,14 @@ export class MembersService {
   }
 
   updateMember(member: Member) {
-    return this.httpClient.put(this.baseUrl + 'users', member).pipe(
-      // tap(() => {
-      //   this.members.update(members => members.map(x => x.userName === member.userName ? member : x));
-      // })
-    );
+    return this.httpClient.put(this.baseUrl + 'users', member);
   }
 
   setMainPhoto(photo: Photo) {
-    return this.httpClient.put(this.baseUrl + 'users/set-main-photo/' + photo.id, {}).pipe(
-      // tap(() => {
-      //   this.members.update(members => members.map(x => {
-      //     if (x.photos.includes(photo)) {
-      //       x.photoUrl = photo.url;
-      //     }
-      //     return x;
-      //   }))
-      // })
-    );
+    return this.httpClient.put(this.baseUrl + 'users/set-main-photo/' + photo.id, {});
   }
 
   deletePhoto(photo: Photo) {
-    return this.httpClient.delete(this.baseUrl + 'users/delete-photo/' + photo.id).pipe(
-      // tap(() => {
-      //   this.members.update(members => members.map(x => {
-      //     if (x.photos.includes(photo)) {
-      //       x.photos = x.photos.filter(p => p.id !== photo.id)
-      //     }
-      //     return x;
-      //   }))
-      // })
-    );
+    return this.httpClient.delete(this.baseUrl + 'users/delete-photo/' + photo.id);
   }
-
 }

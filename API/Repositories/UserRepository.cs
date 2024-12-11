@@ -36,7 +36,16 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
             .SingleOrDefaultAsync(x => x.NormalizedUserName == userName.ToUpper());
         return user;
     }
-
+    
+    public async Task<AppUser?> GetUserByPhotoIdAsync(int photoId)
+    {
+        var user = await context.Users
+            .IgnoreQueryFilters()
+            .Include(x => x.Photos)
+            .SingleOrDefaultAsync(x => x.Photos.Any(p => p.Id == photoId));
+        return user;
+    }
+    
     // Members
     public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
     {
@@ -65,9 +74,13 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         return result;
     }
 
-    public async Task<MemberDto?> GetMemberByNameAsync(string userName)
+    public async Task<MemberDto?> GetMemberByNameAsync(string userName, bool isCurrentUser)
     {
-        var member = await context.Users
+        var memberQuery = isCurrentUser 
+            ? context.Users.IgnoreQueryFilters()
+            : context.Users.AsQueryable();
+
+        var member = await memberQuery
             .Where(x => x.NormalizedUserName == userName.ToUpper())
             .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
             .SingleOrDefaultAsync();

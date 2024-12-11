@@ -1,3 +1,20 @@
 .nv-file-over {
     border: dotted 3px red;
 }
+
+.not-approved-wrap {
+    position: absolute;
+}
+
+.not-approved-text {
+    position: relative;
+    color: red;
+    text-wrap: wrap;
+    max-width: 120px;
+    top: 10px;
+    left: 10px;
+}
+
+.not-approved-img {
+    opacity: 0.5;
+}

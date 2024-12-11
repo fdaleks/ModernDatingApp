@@ -2,14 +2,16 @@
 
 namespace API.Data;
 
-public class UnitOfWork(DataContext context, ILikesRepository likesRepository, 
-    IMessagesRepository messagesRepository, IUserRepository userRepository) : IUnitOfWork
+public class UnitOfWork(DataContext context, IUserRepository userRepository, ILikesRepository likesRepository, 
+    IMessagesRepository messagesRepository, IPhotoRepository photoRepository) : IUnitOfWork
 {
+    public IUserRepository UserRepository => userRepository;
+
     public ILikesRepository LikesRepository => likesRepository;
 
     public IMessagesRepository MessagesRepository => messagesRepository;
 
-    public IUserRepository UserRepository => userRepository;
+    public IPhotoRepository PhotoRepository => photoRepository;
 
     public async Task<bool> CompleteAsync()
     {

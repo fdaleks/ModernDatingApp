@@ -1,1 +1,21 @@
-<p>Photo management will be here soon!</p>
+<div class="row">
+    @for (photo of photos(); track photo.id) {
+        <div class="col-2">
+            <div class="text-center">
+                <h4>{{photo.userName}}</h4>
+
+                <img class="img-thumbnail mb-1" 
+                    src="{{photo.url}}" 
+                    alt="User photo"
+                >
+                <button class="btn btn-sm btn-success me-1" 
+                    (click)="approvePhoto(photo.id)" 
+                >Approve</button>
+                
+                <button class="btn btn-sm btn-danger" 
+                    (click)="rejectPhoto(photo.id)" 
+                >Reject</button>               
+            </div>
+        </div>
+    }
+</div>

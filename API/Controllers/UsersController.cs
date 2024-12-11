@@ -27,7 +27,8 @@ public class UsersController(IUnitOfWork unitOfWork, IPhotoService photoService,
     [HttpGet("{userName}")]
     public async Task<ActionResult<MemberDto>> GetMember(string userName)
     {
-        var member = await unitOfWork.UserRepository.GetMemberByNameAsync(userName);
+        bool isCurrentUser = userName == User.GetUserName();
+        var member = await unitOfWork.UserRepository.GetMemberByNameAsync(userName, isCurrentUser);
 
         if (member == null) return NotFound();
         return Ok(member);
@@ -36,7 +37,7 @@ public class UsersController(IUnitOfWork unitOfWork, IPhotoService photoService,
     [HttpPut]
     public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
     {
-        var currentUser = await unitOfWork.UserRepository.GetUserByNameAsync(User.GetUserName());
+        var currentUser = await unitOfWork.UserRepository.GetUserByIdAsync(User.GetUserId());
         if (currentUser == null) return BadRequest("Could not find user");
 
         mapper.Map(memberUpdateDto, currentUser);
@@ -57,13 +58,8 @@ public class UsersController(IUnitOfWork unitOfWork, IPhotoService photoService,
         var photo = new Photo
         {
             Url = result.SecureUrl.AbsoluteUri,
-            PublicId = result.PublicId
+            PublicId = result.PublicId,
         };
-
-        if (currentUser.Photos.Count == 0)
-        {
-            photo.IsMain = true;
-        }
 
         currentUser.Photos.Add(photo);
 
@@ -94,11 +90,10 @@ public class UsersController(IUnitOfWork unitOfWork, IPhotoService photoService,
     [HttpDelete("delete-photo/{photoId:int}")]
     public async Task<ActionResult> RemovePhoto(int photoId)
     {
-        var currentUser = await unitOfWork.UserRepository.GetUserByNameAsync(User.GetUserName());
-        if (currentUser == null) return BadRequest("User not found");
-
-        var photo = currentUser.Photos.FirstOrDefault(x => x.Id == photoId);
+        var photo = await unitOfWork.PhotoRepository.GetPhotoByIdAsync(photoId);
         if (photo == null || photo.IsMain) return BadRequest("Can't remove this photo");
+
+        if (photo.AppUserId != User.GetUserId()) return BadRequest("You can't delete another user's photo");
 
         if (photo.PublicId != null)
         {
@@ -106,7 +101,7 @@ public class UsersController(IUnitOfWork unitOfWork, IPhotoService photoService,
             if (result.Error != null) return BadRequest(result.Error.Message);
         }
 
-        currentUser.Photos.Remove(photo);
+        unitOfWork.PhotoRepository.RemovePhoto(photo);
 
         if (await unitOfWork.CompleteAsync()) return Ok();
         return BadRequest("Failed to delete photo");
