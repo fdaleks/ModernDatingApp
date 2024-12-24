@@ -1,29 +1,21 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { User } from '../_models/user';
 import { map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LikesService } from './likes.service';
 import { PresenceService } from './presence.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
   private httpClient = inject(HttpClient);
+  private userService = inject(UserService);
   private likesService = inject(LikesService);
   private presenceService = inject(PresenceService);
   private baseUrl: string = environment.apiUrl;
-  currentUser = signal<User | null>(null);
-  roles = computed(() => {
-    const user = this.currentUser();
-    if (user && user.token) {
-      const payload = user.token.split('.')[1];
-      const role = JSON.parse(atob(payload)).role;
-      return Array.isArray(role) ? role : [role];
-    }
-    return [];
-  });
 
   register(registerModel: any) {
     return this.httpClient.post<User>(this.baseUrl + 'account/register', registerModel).pipe(
@@ -41,16 +33,14 @@ export class AccountService {
     );
   }
 
-  setCurrentUser(user: User) {
-    localStorage.setItem('user', JSON.stringify(user));
-    this.currentUser.set(user);
+  setCurrentUser(user: User, setToStorage: boolean = true) {
+    this.userService.setCurrentUser(user, setToStorage);
     this.likesService.getCurrentUserLikeIds();
     this.presenceService.createHubConnection(user);
   }
 
   logout() {
-    localStorage.removeItem('user');
-    this.currentUser.set(null);
+    this.userService.unsetCurrentUser();
     this.presenceService.stopHubConnection();
   }
 

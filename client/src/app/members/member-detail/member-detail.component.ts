@@ -8,8 +8,8 @@ import { DatePipe } from '@angular/common';
 import { MemberMessagesComponent } from "../member-messages/member-messages.component";
 import { MessageService } from '../../_services/message.service';
 import { PresenceService } from '../../_services/presence.service';
-import { AccountService } from '../../_services/account.service';
 import { HubConnectionState } from '@microsoft/signalr';
+import { UserService } from '../../_services/user.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -20,7 +20,7 @@ import { HubConnectionState } from '@microsoft/signalr';
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {
   @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
-  private accountService = inject(AccountService);
+  private userService = inject(UserService);
   private messageService = inject(MessageService);
   private presenceService = inject(PresenceService);
   private route = inject(ActivatedRoute);
@@ -61,7 +61,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
 
   onRouteParamsChange() {
-    const user = this.accountService.currentUser();
+    const user = this.userService.currentUser();
     if (!user) return;
     if (this.messageService.hubConnection?.state === HubConnectionState.Connected && this.activeTab?.heading === 'Messages') {
       this.messageService.hubConnection.stop().then(() => {
@@ -78,7 +78,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       queryParamsHandling: 'merge'
     });
     if (this.activeTab.heading === 'Messages' && this.member) {
-      const user = this.accountService.currentUser();
+      const user = this.userService.currentUser();
       if (!user) return;
       this.messageService.createHubConnection(user, this.member.userName);
     } else {

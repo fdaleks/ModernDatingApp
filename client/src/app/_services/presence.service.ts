@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { User } from '../_models/user';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 export class PresenceService {
   private hubsUrl: string = environment.hubsUrl;
   private hubConnection?: HubConnection;
+  private userService = inject(UserService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
   onlineUsers = signal<string[]>([]);
@@ -43,6 +45,10 @@ export class PresenceService {
         .onTap
         .pipe(take(1))
         .subscribe(() => this.router.navigateByUrl('/members/' + userName + '?tab=Messages'));
+    });
+
+    this.hubConnection.on('UpdateMainPhoto', photoUrl => {
+      this.userService.setUserMainPhoto(photoUrl);
     });
   }
 

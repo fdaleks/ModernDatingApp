@@ -1,5 +1,4 @@
 import { Component, HostListener, inject, OnInit, ViewChild } from '@angular/core';
-import { AccountService } from '../../_services/account.service';
 import { Member } from '../../_models/member';
 import { MembersService } from '../../_services/members.service';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -8,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { PhotoEditorComponent } from "../photo-editor/photo-editor.component";
 import { TimeagoModule } from 'ngx-timeago';
 import { DatePipe } from '@angular/common';
+import { UserService } from '../../_services/user.service';
 
 @Component({
   selector: 'app-member-edit',
@@ -23,7 +23,7 @@ export class MemberEditComponent implements OnInit {
       $event.returnValue = true;
     }
   };
-  private accountService = inject(AccountService);
+  private userService = inject(UserService);
   private membersService = inject(MembersService);
   private toastr = inject(ToastrService);
   member?: Member;
@@ -33,7 +33,7 @@ export class MemberEditComponent implements OnInit {
   }
 
   loadMember() {
-    const user = this.accountService.currentUser();
+    const user = this.userService.currentUser();
     if (!user) return;
     this.membersService.getMember(user.userName).subscribe({
       next: member => this.member = member

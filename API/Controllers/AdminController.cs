@@ -1,13 +1,16 @@
 ﻿using API.Entities;
 using API.Interfaces;
+using API.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AdminController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork) : BaseApiController
+public class AdminController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork, 
+    IHubContext<PresenceHub> presenceHub) : BaseApiController
 {
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("users-with-roles")]
@@ -74,6 +77,11 @@ public class AdminController(UserManager<AppUser> userManager, IUnitOfWork unitO
         if (!hasMainPhoto)
         {
             photo.IsMain = true;
+            var connections = await PresenceTracker.GetConnectionsForUserAsync(user.UserName!);
+            if (connections != null && connections?.Count != null)
+            {
+                await presenceHub.Clients.Clients(connections).SendAsync("UpdateMainPhoto", photo.Url);
+            }
         }
 
         if (await unitOfWork.CompleteAsync()) return NoContent();
