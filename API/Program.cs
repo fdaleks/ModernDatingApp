@@ -25,9 +25,13 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessagesHub>("hubs/messages");
+app.MapFallbackToController("Index", "Fallback");
 
 // Populate database with test data in case if it's empty or it was droppped
 // Also clear a 'Connection' table to avoid presence of the 'ghost' records
